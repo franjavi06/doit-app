@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login } from "../thunks/authThunk";
+import { login, logout, autologin } from "../thunks/authThunk";
 import jwt_decode from "jwt-decode";
 
 const initialState = {
@@ -9,6 +9,7 @@ const initialState = {
   firstname: "",
   lastname: "",
   accesstoken: null,
+  refreshtoken: null,
   expiration: null,
   isLoggedIn: false,
   isLoading: false,
@@ -24,22 +25,6 @@ export const authSlice = createSlice({
       state.isError = false;
       state.error = null;
     },
-    logout: (state) => {
-      state.username = "";
-      state.role = "";
-      state.email = "";
-      state.firstname = "";
-      state.lastname = "";
-      state.accesstoken = null;
-      state.expiration = null;
-
-      state.isLoggedIn = false;
-      state.isLoading = false;
-      state.isError = false;
-      state.error = null;
-
-      console.log(state);
-    },
   },
   extraReducers: (builder) => {
     // Login
@@ -52,7 +37,6 @@ export const authSlice = createSlice({
       state.isError = false;
       state.isLoggedIn = true;
 
-      //JWT Info
       const decoded = jwt_decode(action.payload.accessToken);
       state.username = decoded.unique_name;
       state.role =
@@ -61,6 +45,7 @@ export const authSlice = createSlice({
       state.firstname = decoded.given_name;
       state.lastname = decoded.family_name;
       state.accesstoken = action.payload.accessToken;
+      state.refreshtoken = action.payload.refreshToken;
       state.expiration = decoded.exp;
       console.log(state);
     });
@@ -70,10 +55,72 @@ export const authSlice = createSlice({
       state.error = action.error.message;
       console.log(state);
     });
+
+    // Logout
+    builder.addCase(logout.pending, (state, action) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.isLoggedIn = false;
+      state.isLoading = false;
+      state.isError = false;
+      state.error = null;
+
+      state.username = "";
+      state.role = "";
+      state.email = "";
+      state.firstname = "";
+      state.lastname = "";
+      state.accesstoken = null;
+      state.refreshtoken = null;
+      state.expiration = null;
+
+      console.log(state);
+    });
+    builder.addCase(logout.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.error = action.error.message;
+      console.log(state);
+    });
+
+    // Autologin
+    builder.addCase(autologin.pending, (state, action) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(autologin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      if (action.payload.accessToken) {
+        state.isLoggedIn = true;
+        const decoded = jwt_decode(action.payload.accessToken);
+        state.username = decoded.unique_name;
+        state.role =
+          decoded[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+          ];
+        state.email = decoded.email;
+        state.firstname = decoded.given_name;
+        state.lastname = decoded.family_name;
+        state.accesstoken = action.payload.accessToken;
+        state.refreshtoken = action.payload.refreshToken;
+        state.expiration = decoded.exp;
+      }
+
+      console.log(state);
+    });
+    builder.addCase(autologin.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.error = action.error.message;
+      console.log(state);
+    });
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { logout, clearError } = authSlice.actions;
+export const { clearError } = authSlice.actions;
 
 export default authSlice.reducer;

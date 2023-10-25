@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Text, TextInput, Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/slices/authSlice";
+import { logout } from "../../store/thunks/authThunk";
 
 export const HomeScreen = ({ navigation }) => {
   const { firstname, lastname } = useSelector((state) => state.auth);
