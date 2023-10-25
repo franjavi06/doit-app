@@ -1,10 +1,19 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Text, TextInput, Button } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { login } from "../../../store/thunks/authThunk";
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const dispatch = useDispatch();
+
+  const handleLogin = () => {
+    dispatch(login({ username, password }));
+    //console.log(username, password);
+  };
   return (
     <View style={styles.container}>
       <Text variant="titleLarge">Welcome</Text>
@@ -27,7 +36,7 @@ export const LoginScreen = () => {
           style={styles.loginbutton}
           icon="login"
           mode="contained"
-          onPress={() => console.log("Pressed")}
+          onPress={handleLogin}
         >
           Login
         </Button>

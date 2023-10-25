@@ -1,13 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
+import { store } from "./src/store";
+import { Provider } from "react-redux";
+
 import Mainnavigation from "./src/navigation";
 
 export default function App() {
   return (
-    <PaperProvider>
-      <Mainnavigation />
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider>
+        <Mainnavigation />
+      </PaperProvider>
+    </Provider>
   );
 }
 

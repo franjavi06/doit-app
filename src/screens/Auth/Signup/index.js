@@ -1,7 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
+import { Text, TextInput, Button } from "react-native-paper";
 
-export const SignupScreen = () => {
+export const SignupScreen = ({ navigation }) => {
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
   return (
     <View style={styles.container}>
       <Text variant="titleLarge">Welcome</Text>
@@ -26,12 +29,12 @@ export const SignupScreen = () => {
           mode="contained"
           onPress={() => console.log("Pressed")}
         >
-          Login
+          Signup
         </Button>
         <Button
           icon="login"
           mode="text"
-          onPress={() => navigation.navigate("Signup")}
+          onPress={() => navigation.navigate("Login")}
         >
           Alredy Registered? Login...
         </Button>
@@ -40,4 +43,18 @@ export const SignupScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  subcontainer: {
+    width: "80%",
+  },
+  loginbutton: {
+    borderRadius: 5,
+    marginVertical: 10,
+    paddingVertical: 5,
+  },
+});
