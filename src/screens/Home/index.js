@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 
 export const HomeScreen = ({ navigation }) => {
-  const { firstname, lastname } = useSelector((state) => state.user);
+  const { firstname, lastname } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());

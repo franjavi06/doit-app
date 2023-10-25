@@ -1,22 +1,20 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { HomeScreen } from "../screens/Home";
-import { LoginScreen } from "../screens/Auth/Login";
-import { SignupScreen } from "../screens/Auth/Signup";
+
 import { useSelector } from "react-redux";
+import { LoginScreen, SignupScreen } from "../screens";
+import BottomTabNav from "./BottomTabNav";
 
 const Stack = createNativeStackNavigator();
 //const isLoggedIn = false;
 
 const Mainnavigation = () => {
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
+        <BottomTabNav />
       ) : (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginScreen} />

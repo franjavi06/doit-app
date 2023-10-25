@@ -1,12 +1,14 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
-import { Text, TextInput, Button } from "react-native-paper";
-import { useDispatch } from "react-redux";
+import { Text, TextInput, Button, HelperText } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../store/thunks/authThunk";
 
 export const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const { isLoading, isError, error } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -23,12 +25,14 @@ export const LoginScreen = ({ navigation }) => {
         <TextInput
           mode="outlined"
           label="Username"
+          error={isError}
           value={username}
           onChangeText={(username) => setUsername(username)}
         />
         <TextInput
           mode="outlined"
           label="Password"
+          error={isError}
           value={password}
           onChangeText={(password) => setPassword(password)}
         />
@@ -37,6 +41,7 @@ export const LoginScreen = ({ navigation }) => {
           icon="login"
           mode="contained"
           onPress={handleLogin}
+          loading={isLoading}
         >
           Login
         </Button>
@@ -47,6 +52,15 @@ export const LoginScreen = ({ navigation }) => {
         >
           New to App? Signup...
         </Button>
+        <HelperText
+          style={{
+            textAlign: "center",
+          }}
+          type="error"
+          visible={isError}
+        >
+          {error}
+        </HelperText>
       </View>
     </View>
   );

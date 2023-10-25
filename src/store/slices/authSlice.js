@@ -20,6 +20,10 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    clearError: (state) => {
+      state.isError = false;
+      state.error = null;
+    },
     logout: (state) => {
       state.username = "";
       state.role = "";
@@ -64,11 +68,12 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.error = action.error.message;
+      console.log(state);
     });
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { logout } = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 
 export default authSlice.reducer;
